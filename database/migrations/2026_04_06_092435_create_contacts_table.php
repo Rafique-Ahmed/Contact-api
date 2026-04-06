@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->timestamps();
-            
+
             $table->index('user_id');
             $table->index('email');
             $table->index('phone');

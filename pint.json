@@ -1,0 +1,19 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "array_syntax": true,
+        "concat_space": {
+            "spacing": "one"
+        },
+        "fully_qualified_strict_types": true,
+        "method_argument_space": {
+            "on_multiline": "ignore"
+        },
+        "no_unused_imports": true,
+        "ordered_imports": true,
+        "phpdoc_align": true,
+        "phpdoc_separation": true,
+        "phpdoc_summary": false,
+        "single_quote": true
+    }
+}

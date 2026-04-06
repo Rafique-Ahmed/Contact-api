@@ -2,30 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contact;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $query = $request->user()->contacts();
-        
-        if ($request->has('search') && $request->search) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
+
+        if ($request->has('search') && $request->input('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('email', 'LIKE', "%{$search}%")
-                  ->orWhere('phone', 'LIKE', "%{$search}%");
+                    ->orWhere('email', 'LIKE', "%{$search}%")
+                    ->orWhere('phone', 'LIKE', "%{$search}%");
             });
         }
-        
+
         $contacts = $query->orderBy('created_at', 'desc')->get();
-        
+
         return response()->json($contacts);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -34,21 +34,22 @@ class ContactController extends Controller
         ]);
 
         $contact = $request->user()->contacts()->create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'phone' => $request->input('phone'),
         ]);
 
         return response()->json($contact, 201);
     }
 
-    public function show(Request $request, $id)
+    public function show(Request $request, int $id): JsonResponse
     {
         $contact = $request->user()->contacts()->findOrFail($id);
+
         return response()->json($contact);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -62,7 +63,7 @@ class ContactController extends Controller
         return response()->json($contact);
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, int $id): JsonResponse
     {
         $contact = $request->user()->contacts()->findOrFail($id);
         $contact->delete();
@@ -70,12 +71,12 @@ class ContactController extends Controller
         return response()->json(['message' => 'Contact deleted successfully']);
     }
 
-    public function dashboard(Request $request)
+    public function dashboard(Request $request): JsonResponse
     {
         $totalContacts = $request->user()->contacts()->count();
-        
+
         return response()->json([
-            'total_contacts' => $totalContacts
+            'total_contacts' => $totalContacts,
         ]);
     }
 }
