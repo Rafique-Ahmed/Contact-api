@@ -16,3 +16,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/dashboard', [ContactController::class, 'dashboard']);
     Route::apiResource('contacts', ContactController::class);
 });
+
+use App\Http\Controllers\PasswordResetController;
+
+// Add these with your public routes
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink']);
+Route::post('/reset-password', [PasswordResetController::class, 'reset']);
